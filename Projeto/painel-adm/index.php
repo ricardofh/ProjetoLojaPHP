@@ -91,7 +91,11 @@ if(@$_GET['pagina'] == $menu1){
 
 else if(@$_GET['pagina'] == $menu2){
 	require_once($menu2. '.php');
-};
+}
+
+else {
+  require_once($menu1. '.php');
+}
     ?>
   </div>
 
