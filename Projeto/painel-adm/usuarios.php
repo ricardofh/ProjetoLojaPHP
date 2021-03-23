@@ -1,16 +1,63 @@
 <?php
 $pag = 'usuarios';
+
+require_once('../conexao.php');
 ?>
 
-<!-- BOOTSTRAP E JQUERY -->
+<!-- BOOTSTRAP, DATATABLE E JQUERY -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="../DataTable/datatables.min.css"/>
+<script type="text/javascript" src="../DataTable/datatables.min.js"></script>
 
 <!-- BOTAO DE NOVO USUARIO -->
 <a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Novo Usuário</a>
 
+<!-- DATATABLE -->
+<div class="mt-4">
 
+<!-- SELECT NO BANCO DE DADOS -->
+<?php
+    $query_con = $pdo->query("SELECT *from tbl_usuarios");
+    $res_con = $query_con->fetchAll(PDO::FETCH_ASSOC);
+    if(@count($res_con) > 0){
+?>
+
+    <table id="example" class="table table-hover" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>CPF</th>
+                <th>Email</th>
+                <th>Senha</th>
+                <th>Nivel</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <?php
+            for($i=0; $i < $total_reg; $i++){
+                foreach ($res[$i] as $key => $value){
+                }
+            }
+        ?>
+        
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>System Architect</td>
+                <td>System Architect</td>
+                <td>System Architect</td>
+                <td>System Architect</td>
+            </tr>
+        </tbody>
+    </table>
+    <?php }else{
+        echo '<p>NÃO EXISTEM DADOS PARA SEREM EXIBIDOS<p>';
+    } ?>
+</div>
 <!--MODAL -->
 <div class="modal fade" tabindex="-1" id="modalCadastrar">
     <div class="modal-dialog">
@@ -143,5 +190,12 @@ if (@$_GET['funcao'] == "novo") { ?>
             }
         });
     });
+</script>
+
+<!-- SCRIPT DO DATATABLE -->
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#example').DataTable();
+} );
 </script>
 
