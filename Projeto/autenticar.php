@@ -5,6 +5,7 @@ require_once("conexao.php");
 $usuario = $_POST['usuario'];
 $senha = $_POST['senha'];
 
+//CONSULTA NO BANCO PARA BUSCAR CPF OU EMAIL
 $query_con = $pdo->prepare("SELECT * from usuarios WHERE (email = :usuario or cpf = :usuario) and senha = :senha");
 $query_con->bindValue(":usuario", $usuario);
 $query_con->bindValue(":senha", $senha);
