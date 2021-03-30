@@ -2,13 +2,11 @@
 //requisição de conexão
 require_once('config.php');
 
-date_default_timezone_set ('America/Sao_Paulo');
+date_default_timezone_set('America/Sao_Paulo');
 
 try {
-    $pdo = new PDO("mysql:dbname=$banco;host=$servidor;charset=utf8"
-    , "$usuario", "$senha");
+    $pdo = new PDO("mysql:dbname=$banco;host=$servidor;charset=utf8", "$usuario", "$senha");
 } catch (Exception $e) {
-    echo 'Erro ao Conectar com o bando de dados!! <p>' .$e;
+    echo 'Erro ao Conectar com o banco de dados! <p>' . $e;
 }
-
 ?>

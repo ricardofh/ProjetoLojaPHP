@@ -1,20 +1,17 @@
 <?php
-$pag = 'usuarios';
+$pag = 'fornecedores';
 @session_start();
 
 require_once('../conexao.php');
 require_once('verificar-permissao.php')
+
 ?>
 
-<!-- BOTAO DE NOVO USUARIO -->
-<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Novo Usuário</a>
+<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Novo Fornecedor</a>
 
-<!-- DATATABLE -->
 <div class="mt-4" style="margin-right:25px">
-
-	<!-- SELECT NO BANCO DE DADOS -->
 	<?php
-	$query = $pdo->query("SELECT * from usuarios order by id desc");
+	$query = $pdo->query("SELECT * from fornecedores order by id desc");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
@@ -24,10 +21,10 @@ require_once('verificar-permissao.php')
 				<thead>
 					<tr>
 						<th>Nome</th>
-						<th>CPF</th>
+						<th>Tipo Pessoa</th>
+						<th>CPF / CNPJ</th>
 						<th>Email</th>
-						<th>Senha</th>
-						<th>Nível</th>
+						<th>Telefone</th>
 						<th>Ações</th>
 					</tr>
 				</thead>
@@ -41,19 +38,23 @@ require_once('verificar-permissao.php')
 
 						<tr>
 							<td><?php echo $res[$i]['nome'] ?></td>
+							<td><?php echo $res[$i]['tipo_pessoa'] ?></td>
 							<td><?php echo $res[$i]['cpf'] ?></td>
 							<td><?php echo $res[$i]['email'] ?></td>
-							<td><?php echo $res[$i]['senha'] ?></td>
-							<td><?php echo $res[$i]['nivel'] ?></td>
+							<td><?php echo $res[$i]['telefone'] ?></td>
 							<td>
-								<!-- BOTAO DE EDIÇÃO -->
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
 									<i class="bi bi-pencil-square text-primary"></i>
 								</a>
-								<!-- BOTAO DE EXCLUSÃO -->
+
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
 									<i class="bi bi-archive text-danger mx-1"></i>
 								</a>
+
+								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['endereco'] ?>', '<?php echo $res[$i]['nome'] ?>')" title="Ver Endereço">
+									<i class="bi bi-house text-dark"></i></i>
+								</a>
+
 							</td>
 						</tr>
 
@@ -68,28 +69,27 @@ require_once('verificar-permissao.php')
 	} ?>
 </div>
 
-<!-- BLOCO PARA SABER QUAL TITULO DE MODAL ABRIR -->
+
 <?php
-//BLOCO PARA EDITAR DADOS  
 if (@$_GET['funcao'] == "editar") {
 	$titulo_modal = 'Editar Registro';
-	$query = $pdo->query("SELECT * from usuarios where id = '$_GET[id]'");
+	$query = $pdo->query("SELECT * from fornecedores where id = '$_GET[id]'");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
 		$nome = $res[0]['nome'];
 		$email = $res[0]['email'];
 		$cpf = $res[0]['cpf'];
-		$senha = $res[0]['senha'];
-		$nivel = $res[0]['nivel'];
+		$telefone = $res[0]['telefone'];
+		$endereco = $res[0]['endereco'];
+		$tipo_pessoa = $res[0]['tipo_pessoa'];
 	}
-	//BLOCO PARA INSERIR DADOS 
 } else {
 	$titulo_modal = 'Inserir Registro';
 }
 ?>
 
-<!--MODAL -->
+
 <div class="modal fade" tabindex="-1" id="modalCadastrar" data-bs-backdrop="static">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -97,13 +97,9 @@ if (@$_GET['funcao'] == "editar") {
 				<h5 class="modal-title"><?php echo $titulo_modal ?></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-
-			<!--FORMULARIO DE CADASTRO -->
 			<form method="POST" id="form">
 				<div class="modal-body">
 
-
-					<!--NOME E CPF -->
 					<div class="row">
 						<div class="col-md-6">
 							<div class="mb-3">
@@ -113,37 +109,48 @@ if (@$_GET['funcao'] == "editar") {
 						</div>
 						<div class="col-md-6">
 							<div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">CPF</label>
-								<input type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF" required="" value="<?php echo @$cpf ?>">
+								<label for="exampleFormControlInput1" class="form-label">Tipo Pessoa</label>
+								<select class="form-select mt-1" aria-label="Default select example" name="tipo">
+
+									<option <?php if (@$tipo == 'Física') { ?> selected <?php } ?> value="Física">Física</option>
+
+									<option <?php if (@$tipo == 'Júridica') { ?> selected <?php } ?> value="Júridica">Júridica</option>
+
+
+								</select>
 							</div>
 						</div>
 					</div>
 
 
-					<!--DEMAIS DADOS-->
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">Telefone</label>
+								<input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required="" value="<?php echo @$telefone ?>">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">CPF / CNPJ</label>
+								<input type="text" class="form-control" id="doc" name="cpf" placeholder="CPF / CNPJ" value="<?php echo @$cpf ?>">
+							</div>
+						</div>
+					</div>
+
+
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" name="email" placeholder="Email" required="" value="<?php echo @$email ?>">
+						<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<?php echo @$email ?>">
 					</div>
 
 					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">Senha</label>
-						<input type="text" class="form-control" id="senha" name="senha" placeholder="Senha" required="" value="<?php echo @$senha ?>">
+						<label for="exampleFormControlInput1" class="form-label">Endereço</label>
+						<input type="text" class="form-control" id="endereco" name="endereco" placeholder="Rua X Número X Bairro X ..." value="<?php echo @$senha ?>">
 					</div>
 
-					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">Nível</label>
-						<select class="form-select mt-1" aria-label="Default select example" name="nivel">
 
-							<option <?php if (@$nivel == 'Operador') { ?> selected <?php } ?> value="Operador">Operador</option>
-
-							<option <?php if (@$nivel == 'Administrador') { ?> selected <?php } ?> value="Administrador">Administrador</option>
-
-							<option <?php if (@$nivel == 'Tesoureiro') { ?> selected <?php } ?> value="Tesoureiro">Tesoureiro</option>
-
-
-						</select>
-					</div>
 
 					<small>
 						<div align="center" class="mt-1" id="mensagem">
@@ -152,15 +159,12 @@ if (@$_GET['funcao'] == "editar") {
 					</small>
 
 				</div>
-
 				<div class="modal-footer">
 					<button type="button" id="btn-fechar" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
 					<button name="btn-salvar" id="btn-salvar" type="submit" class="btn btn-primary">Salvar</button>
 
-					<!-- BLOCO OCULTO DO ID PARA A EDIÇÃO -->
 					<input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>">
 
-					<!-- BLOCO PARA EVITAR DUPLICIDADE DO CPF E EMAIL NA EDIÇÃO -->
 					<input name="antigo" type="hidden" value="<?php echo @$cpf ?>">
 					<input name="antigo2" type="hidden" value="<?php echo @$email ?>">
 
@@ -170,7 +174,11 @@ if (@$_GET['funcao'] == "editar") {
 	</div>
 </div>
 
-<!--MODAL EXCLUIR -->
+
+
+
+
+
 <div class="modal fade" tabindex="-1" id="modalDeletar">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -178,8 +186,6 @@ if (@$_GET['funcao'] == "editar") {
 				<h5 class="modal-title"><?php echo $titulo_modal ?></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-
-			<!--FORMULARIO DE EXCLUSÃO -->
 			<form method="POST" id="form-excluir">
 				<div class="modal-body">
 
@@ -193,10 +199,9 @@ if (@$_GET['funcao'] == "editar") {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="btn-fechar-excluir" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-					<button name="btn-excluir" id="btn-excluir" type="submit" class="btn btn-danger">DELETAR</button>
+					<button type="button" id="btn-fechar" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button name="btn-excluir" id="btn-excluir" type="submit" class="btn btn-danger">Excluir</button>
 
-					<!-- BLOCO OCULTO DO ID PARA A EDIÇÃO -->
 					<input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>">
 
 				</div>
@@ -205,18 +210,47 @@ if (@$_GET['funcao'] == "editar") {
 	</div>
 </div>
 
-<!-- CHAMANDO A MODEL CADASTRAR -->
+
+
+
+
+<div class="modal fade" tabindex="-1" id="modalDados">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Dados do Fornecedor</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body mb-4">
+
+				<b>Nome: </b>
+				<span id="nome-registro"></span>
+				<hr>
+				<b>Endereço: </b>
+				<span id="endereco-registro"></span>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+
 <?php
 if (@$_GET['funcao'] == "novo") { ?>
 	<script type="text/javascript">
 		var myModal = new bootstrap.Modal(document.getElementById('modalCadastrar'), {
 			backdrop: 'static'
 		})
+
 		myModal.show();
 	</script>
 <?php } ?>
 
-<!-- CHAMANDO A MODAL EDITAR -->
+
+
 <?php
 if (@$_GET['funcao'] == "editar") { ?>
 	<script type="text/javascript">
@@ -228,7 +262,8 @@ if (@$_GET['funcao'] == "editar") { ?>
 	</script>
 <?php } ?>
 
-<!-- CHAMANDO A MODAL EXLUIR -->
+
+
 <?php
 if (@$_GET['funcao'] == "deletar") { ?>
 	<script type="text/javascript">
@@ -240,7 +275,10 @@ if (@$_GET['funcao'] == "deletar") { ?>
 	</script>
 <?php } ?>
 
-<!--AJAX PARA O FORMULARIO DE USUARIOS-->
+
+
+
+<!--AJAX PARA INSERÇÃO E EDIÇÃO DOS DADOS COM IMAGEM -->
 <script type="text/javascript">
 	$("#form").submit(function() {
 		var pag = "<?= $pag ?>";
@@ -288,7 +326,10 @@ if (@$_GET['funcao'] == "deletar") { ?>
 	});
 </script>
 
-<!--AJAX PARA O FORMULARIO DE EXCLUSÃO DE USUARIOS-->
+
+
+
+<!--AJAX PARA EXCLUIR DADOS -->
 <script type="text/javascript">
 	$("#form-excluir").submit(function() {
 		var pag = "<?= $pag ?>";
@@ -328,7 +369,8 @@ if (@$_GET['funcao'] == "deletar") { ?>
 	});
 </script>
 
-<!-- SCRIPT DO DATATABLE -->
+
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#example').DataTable({
@@ -337,3 +379,18 @@ if (@$_GET['funcao'] == "deletar") { ?>
 	});
 </script>
 
+
+<script type="text/javascript">
+	function mostrarDados(endereco, nome) {
+		event.preventDefault();
+
+		$('#endereco-registro').text(endereco);
+		$('#nome-registro').text(nome);
+
+		var myModal = new bootstrap.Modal(document.getElementById('modalDados'), {
+
+		})
+
+		myModal.show();
+	}
+</script>

@@ -1,11 +1,15 @@
+<?php
+    require_once("conexao.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V19</title>
+	<title><?php echo $nome_sistema ?></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="vendor/login/images/icons/favicon.ico"/>
+	<!-- <link rel="icon" type="image/png" href="vendor/login/images/icons/favicon.ico"/> -->
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/login/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -26,54 +30,37 @@
 	<link rel="stylesheet" type="text/css" href="vendor/login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="vendor/login/css/main.css">
 <!--===============================================================================================-->
+	<link rel="shortcut icon" href="img/favcon2.ico"/>
+
 </head>
 <body>
 	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="POST" action="autenticar.php">
 					<span class="login100-form-title p-b-33">
-						Account Login
+						<img src="img/logo2.png" >
 					</span>
 
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" name="email" placeholder="Email">
+					<div class="wrap-input100 validate-input" data-validate = "Email ou CPF" required="">
+						<input class="input100" type="text" name="usuario" placeholder="Email ou CPF">
 						<span class="focus-input100-1"></span>
 						<span class="focus-input100-2"></span>
 					</div>
 
-					<div class="wrap-input100 rs1 validate-input" data-validate="Password is required">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+					<div class="wrap-input100 rs1 validate-input" data-validate="Email ou CPF" required="">
+						<input class="input100" type="password" name="senha" placeholder="Senha">
 						<span class="focus-input100-1"></span>
 						<span class="focus-input100-2"></span>
 					</div>
 
 					<div class="container-login100-form-btn m-t-20">
-						<button class="login100-form-btn">
-							Sign in
+						<button type="submit" class="login100-form-btn">
+							Entrar
 						</button>
 					</div>
 
-					<div class="text-center p-t-45 p-b-4">
-						<span class="txt1">
-							Forgot
-						</span>
-
-						<a href="#" class="txt2 hov1">
-							Username / Password?
-						</a>
-					</div>
-
-					<div class="text-center">
-						<span class="txt1">
-							Create an account?
-						</span>
-
-						<a href="#" class="txt2 hov1">
-							Sign up
-						</a>
-					</div>
 				</form>
 			</div>
 		</div>
@@ -82,21 +69,21 @@
 
 	
 <!--===============================================================================================-->
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="vendor/login/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/animsition/js/animsition.min.js"></script>
+	<script src="vendor/login/vendor/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="vendor/login/vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/login/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/select2/select2.min.js"></script>
+	<script src="vendor/login/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/daterangepicker/moment.min.js"></script>
-	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+	<script src="vendor/login/vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/login/vendor/daterangepicker/daterangepicker.js"></script>
 <!--===============================================================================================-->
-	<script src="vendor/countdowntime/countdowntime.js"></script>
+	<script src="vendor/login/vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-	<script src="js/main.js"></script>
+	<script src="vendor/login/js/main.js"></script>
 
 </body>
 </html>
