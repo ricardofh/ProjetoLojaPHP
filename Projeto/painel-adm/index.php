@@ -15,7 +15,7 @@ $menu3 = 'fornecedores';
 $menu4 = 'categorias';
 
 //RECUPERAR DADOS DO USSUARIO
-$query = $pdo->query("SELECT * from tbl_usuario WHERE id = '$_SESSION[id_usuario]'");
+$query = $pdo->query("SELECT * from usuarios WHERE id = '$_SESSION[id_usuario]'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $nome_usu = $res[0]['nome'];
 $email_usu = $res[0]['email'];
@@ -101,7 +101,7 @@ $id_usu = $res[0]['id'];
                   <?php echo $nome_usu ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                  <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#modalPerfil">Editar Perfil</a></li>
+                  <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#modalPerfil">Mudar Senha</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>

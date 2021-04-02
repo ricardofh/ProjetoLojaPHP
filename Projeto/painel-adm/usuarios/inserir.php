@@ -5,6 +5,8 @@ $nome = $_POST['nome'];
 $email = $_POST['email'];
 $cpf = $_POST['cpf'];
 $senha = $_POST['senha'];
+$nivel = $_POST['nivel'];
+$id = $_POST['id'];
 
 //EVITAR DUPLICIDADE DO CPF E EMAIL
 $antigo = $_POST['antigo'];

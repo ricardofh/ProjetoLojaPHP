@@ -7,7 +7,7 @@ require_once('verificar-permissao.php')
 
 ?>
 
-<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Nova Categoria</a>
+<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-primary mt-2">Nova Categoria</a>
 
 <div class="mt-4" style="margin-right:25px">
 	<?php
@@ -45,7 +45,7 @@ require_once('verificar-permissao.php')
 								</a>
 
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
-									<i class="bi bi-archive text-danger mx-1"></i>
+									<i i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 							</td>
 						</tr>

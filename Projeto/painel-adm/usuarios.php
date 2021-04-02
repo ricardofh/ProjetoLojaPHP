@@ -7,7 +7,7 @@ require_once('verificar-permissao.php')
 ?>
 
 <!-- BOTAO DE NOVO USUARIO -->
-<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-secondary mt-2">Novo Usuário</a>
+<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-primary mt-2">Novo Usuário</a>
 
 <!-- DATATABLE -->
 <div class="mt-4" style="margin-right:25px">
@@ -26,7 +26,6 @@ require_once('verificar-permissao.php')
 						<th>Nome</th>
 						<th>CPF</th>
 						<th>Email</th>
-						<th>Senha</th>
 						<th>Nível</th>
 						<th>Ações</th>
 					</tr>
@@ -43,7 +42,6 @@ require_once('verificar-permissao.php')
 							<td><?php echo $res[$i]['nome'] ?></td>
 							<td><?php echo $res[$i]['cpf'] ?></td>
 							<td><?php echo $res[$i]['email'] ?></td>
-							<td><?php echo $res[$i]['senha'] ?></td>
 							<td><?php echo $res[$i]['nivel'] ?></td>
 							<td>
 								<!-- BOTAO DE EDIÇÃO -->
@@ -52,7 +50,7 @@ require_once('verificar-permissao.php')
 								</a>
 								<!-- BOTAO DE EXCLUSÃO -->
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
-									<i class="bi bi-archive text-danger mx-1"></i>
+									<i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 							</td>
 						</tr>
