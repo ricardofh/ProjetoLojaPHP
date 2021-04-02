@@ -1,5 +1,5 @@
 <?php
-$pag = 'fornecedores';
+$pag = 'produtos';
 @session_start();
 
 require_once('../conexao.php');
@@ -7,11 +7,11 @@ require_once('verificar-permissao.php')
 
 ?>
 
-<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-primary mt-2">Novo Fornecedor</a>
+<a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-primary mt-2">Novo Produto</a>
 
 <div class="mt-4" style="margin-right:25px">
 	<?php
-	$query = $pdo->query("SELECT * from fornecedores order by id desc");
+	$query = $pdo->query("SELECT * from produtos order by id desc");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
@@ -21,10 +21,12 @@ require_once('verificar-permissao.php')
 				<thead>
 					<tr>
 						<th>Nome</th>
-						<th>Tipo Pessoa</th>
-						<th>CPF / CNPJ</th>
-						<th>Email</th>
-						<th>Telefone</th>
+						<th>Código</th>
+						<th>Estoque</th>
+						<th>Valor Compra</th>
+						<th>Valor Venda</th>
+						<th>Fornecedor</th>
+						<th>Foto</th>
 						<th>Ações</th>
 					</tr>
 				</thead>
@@ -34,14 +36,21 @@ require_once('verificar-permissao.php')
 					for ($i = 0; $i < $total_reg; $i++) {
 						foreach ($res[$i] as $key => $value) {
 						}
+						$id_cat = $res[$i]['categoria'];
+						$query_2 = $pdo->query("SELECT * FROM categorias WHERE id ='$id_cat'");
+						$res_2 = $query_2->fetchAll(PDO::FETCH_ASSOC);
+						$nome_cat = $res_2[0]['nome']; 
 					?>
 
 						<tr>
 							<td><?php echo $res[$i]['nome'] ?></td>
-							<td><?php echo $res[$i]['tipo_pessoa'] ?></td>
-							<td><?php echo $res[$i]['cpf'] ?></td>
-							<td><?php echo $res[$i]['email'] ?></td>
-							<td><?php echo $res[$i]['telefone'] ?></td>
+							<td><?php echo $res[$i]['codigo'] ?></td>
+							<td><?php echo $res[$i]['estoque'] ?></td>
+							<td><?php echo $res[$i]['valor_compra'] ?></td>
+							<td><?php echo $res[$i]['valor_venda'] ?></td>
+							<td><?php echo $res[$i]['fornecedor'] ?></td>
+							
+							<td><img src="../img/categorias/<?php echo $res[$i]['foto'] ?>" width="40"></td>
 							<td>
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
 									<i class="bi bi-pencil-square text-primary"></i>
@@ -51,10 +60,9 @@ require_once('verificar-permissao.php')
 									<i i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 
-								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['endereco'] ?>', '<?php echo $res[$i]['nome'] ?>')" title="Mais informações">
+								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['descricao'] ?>', '<?php echo $res[$i]['foto'] ?>', '<?php echo $nome_cat ?>')" title="Mais informações">
 									<i class="bi bi-card-list text-dark"></i></i>
 								</a>
-
 							</td>
 						</tr>
 
@@ -73,16 +81,19 @@ require_once('verificar-permissao.php')
 <?php
 if (@$_GET['funcao'] == "editar") {
 	$titulo_modal = 'Editar Registro';
-	$query = $pdo->query("SELECT * from fornecedores where id = '$_GET[id]'");
+	$query = $pdo->query("SELECT * from produtos where id = '$_GET[id]'");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
 		$nome = $res[0]['nome'];
-		$email = $res[0]['email'];
-		$cpf = $res[0]['cpf'];
-		$telefone = $res[0]['telefone'];
-		$endereco = $res[0]['endereco'];
-		$tipo_pessoa = $res[0]['tipo_pessoa'];
+		$codigo = $res[0]['codigo'];
+		$categoria = $res[0]['categoria'];
+		$fornecedor = $res[0]['fornecedor'];
+		$descricao = $res[0]['descricao'];
+		$estoque = $res[0]['estoque'];
+		$valor_compra = $res[0]['valor_compra'];
+		$valor_venda = $res[0]['valor_venda'];
+		$foto = $res[0]['foto'];
 	}
 } else {
 	$titulo_modal = 'Inserir Registro';
@@ -91,7 +102,7 @@ if (@$_GET['funcao'] == "editar") {
 
 
 <div class="modal fade" tabindex="-1" id="modalCadastrar" data-bs-backdrop="static">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title"><?php echo $titulo_modal ?></h5>
@@ -101,56 +112,62 @@ if (@$_GET['funcao'] == "editar") {
 				<div class="modal-body">
 
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-4">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">Código</label>
+								<input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo do produto" required="" value="<?php echo @$codigo ?>">
+							</div>
+						</div>
+					
+						<div class="col-md-4">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Nome</label>
 								<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required="" value="<?php echo @$nome ?>">
 							</div>
 						</div>
-						<div class="col-md-6">
+					
+						<div class="col-md-4">
 							<div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">Tipo Pessoa</label>
-								<select class="form-select mt-1" aria-label="Default select example" name="tipo">
+								<label for="exampleFormControlInput1" class="form-label">Valor Venda</label>
+								<input type="text" class="form-control" id="valor_venda" name="valor_venda" placeholder="Valor Venda" required="" value="<?php echo @$valor_venda ?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="exampleFormControlInput1" class="form-label">Descrição do Produto</label>
+						<textarea type="text" class="form-control" id="descricao" name="descricao" maxlength="200"> <?php echo @$descricao ?></textarea>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">Categoria</label>
+								<select class="form-select mt-1" aria-label="Default select example" name="categoria">
 
 									<option <?php if (@$tipo == 'Física') { ?> selected <?php } ?> value="Física">Física</option>
-
-									<option <?php if (@$tipo == 'Júridica') { ?> selected <?php } ?> value="Júridica">Júridica</option>
-
 
 								</select>
 							</div>
 						</div>
-					</div>
 
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Foto</label>
+								<input type="file" value="<?php echo @$foto ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg();">
+							</div>
 
-
-					<div class="row">
-						<div class="col-md-6">
-							<div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">Telefone</label>
-								<input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required="" value="<?php echo @$telefone ?>">
+							<div id="divImgConta" class="mt-4">
+								<?php if (@$foto != "") { ?>
+								<img src="../img/categorias/<?php echo $foto ?>" width="200px" id="target">
+								<?php  } else { ?>
+								<img src="../img/categorias/sem-foto.jpg" width="200px" id="target">
+								<?php } ?>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">CPF / CNPJ</label>
-								<input type="text" class="form-control" id="doc" name="cpf" placeholder="CPF / CNPJ" value="<?php echo @$cpf ?>">
-							</div>
-						</div>
 					</div>
 
-
-					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">Email</label>
-						<input type="email" class="form-control" id="email" name="email" placeholder="Email" value="<?php echo @$email ?>">
-					</div>
-
-					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">Endereço</label>
-						<input type="text" class="form-control" id="endereco" name="endereco" placeholder="Rua X Número X Bairro X ..." value="<?php echo @$senha ?>">
-					</div>
-
-
+					
 
 					<small>
 						<div align="center" class="mt-1" id="mensagem">
@@ -165,8 +182,8 @@ if (@$_GET['funcao'] == "editar") {
 
 					<input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>">
 
-					<input name="antigo" type="hidden" value="<?php echo @$cpf ?>">
-					<input name="antigo2" type="hidden" value="<?php echo @$email ?>">
+					<input name="antigo" type="hidden" value="<?php echo @$nome ?>">
+
 
 				</div>
 			</form>
@@ -211,9 +228,6 @@ if (@$_GET['funcao'] == "editar") {
 </div>
 
 
-
-
-<!-- MODAL PARA VISUALIZAR RESTANTE DOS DADOS -->
 <div class="modal fade" tabindex="-1" id="modalDados">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -224,18 +238,18 @@ if (@$_GET['funcao'] == "editar") {
 
 			<div class="modal-body mb-4">
 
-				<b>Nome: </b>
-				<span id="nome-registro"></span>
+				<b>Categoria: </b>
+				<span id="categoria-registro"></span>
 				<hr>
-				<b>Endereço: </b>
-				<span id="endereco-registro"></span>
+				<b>Descrição: </b>
+				<span id="descricao-registro"></span>
+				<hr>
+				<img id="imagem-registro" src="" class="mt-4" width="200">
 			</div>
 
 		</div>
 	</div>
 </div>
-
-
 
 
 <?php
@@ -370,7 +384,7 @@ if (@$_GET['funcao'] == "deletar") { ?>
 </script>
 
 
-<!-- DATATABLE -->
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#example').DataTable({
@@ -379,13 +393,40 @@ if (@$_GET['funcao'] == "deletar") { ?>
 	});
 </script>
 
-<!-- FUNÇÃO DE MOSTRAR DADOS -->
+
+
+
+
+
+<!--SCRIPT PARA CARREGAR IMAGEM -->
 <script type="text/javascript">
-	function mostrarDados(endereco, nome) {
+	function carregarImg() {
+
+		var target = document.getElementById('target');
+		var file = document.querySelector("input[type=file]").files[0];
+		var reader = new FileReader();
+
+		reader.onloadend = function() {
+			target.src = reader.result;
+		};
+
+		if (file) {
+			reader.readAsDataURL(file);
+
+
+		} else {
+			target.src = "";
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	function mostrarDados(descricao, foto, categoria) {
 		event.preventDefault();
 
-		$('#endereco-registro').text(endereco);
-		$('#nome-registro').text(nome);
+		$('#categoria-registro').text(categoria);
+		$('#descricao-registro').text(descricao);
+		$('#imagem-registro').attr('src', '../img/produtos/' + foto);
 
 		var myModal = new bootstrap.Modal(document.getElementById('modalDados'), {
 
