@@ -3,8 +3,7 @@ $pag = 'produtos';
 @session_start();
 
 require_once('../conexao.php');
-require_once('verificar-permissao.php')
-
+require_once('verificar-permissao.php');
 ?>
 
 <a href="index.php?pagina=<?php echo $pag ?>&funcao=novo" type="button" class="btn btn-primary mt-2">Novo Produto</a>
@@ -39,30 +38,48 @@ require_once('verificar-permissao.php')
 						$id_cat = $res[$i]['categoria'];
 						$query_2 = $pdo->query("SELECT * FROM categorias WHERE id ='$id_cat'");
 						$res_2 = $query_2->fetchAll(PDO::FETCH_ASSOC);
-						$nome_cat = $res_2[0]['nome']; 
+						$nome_cat = $res_2[0]['nome'];
+
+						//BUCAR DADOS DO FORNECEDOR
+						$id_forn = $res[$i]['fornecedor'];
+						$query_f = $pdo->query("SELECT * from fornecedores where id ='$id_forn'");
+						$res_f = $query_f->fetchAll(PDO::FETCH_ASSOC);
+						$total_reg_f = @count($res_f);
+						if ($total_reg_f > 0) {
+							$nome_forn = $res_f[0]['nome'];
+							$tel_forn = $res_f[0]['telefone'];
+						} else {
+							$nome_forn = 'NENHUM CADASTRADO';
+							$tel_forn = '';
+						}
 					?>
 
 						<tr>
 							<td><?php echo $res[$i]['nome'] ?></td>
 							<td><?php echo $res[$i]['codigo'] ?></td>
 							<td><?php echo $res[$i]['estoque'] ?></td>
-							<td><?php echo $res[$i]['valor_compra'] ?></td>
-							<td><?php echo $res[$i]['valor_venda'] ?></td>
-							<td><?php echo $res[$i]['fornecedor'] ?></td>
-							
-							<td><img src="../img/categorias/<?php echo $res[$i]['foto'] ?>" width="40"></td>
+							<td>R$ <?php echo number_format($res[$i]['valor_compra'], 2, ',', '.'); ?></td>
+							<td>R$ <?php echo number_format($res[$i]['valor_venda'], 2, ',', '.'); ?></td>
+							<td><?php echo $nome_forn ?></td>
+
+							<td><img src="../img/<?php echo $pag ?>/<?php echo $res[$i]['foto'] ?>" width="40"></td>
 							<td>
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
-									<i class="bi bi-pencil-square text-primary"></i>
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro" style="text-decoration: none">
+									<i class="bi bi-pencil-square text-primary mx-1"></i>
 								</a>
 
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro" style="text-decoration: none">
 									<i i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 
-								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['descricao'] ?>', '<?php echo $res[$i]['foto'] ?>', '<?php echo $nome_cat ?>')" title="Mais informações">
-									<i class="bi bi-card-list text-dark"></i></i>
+								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['nome'] ?>', '<?php echo $res[$i]['descricao'] ?>', '<?php echo $res[$i]['foto'] ?>', '<?php echo $nome_cat ?>', '<?php echo $nome_forn ?>', '<?php echo $tel_forn ?>')" title="Mais informações" style="text-decoration: none">
+									<i class="bi bi-card-list text-dark mx-1"></i>
 								</a>
+
+								<a href="#" onclick="comprarProdutos('<?php echo $res[$i]['id'] ?>', )" title="Comprar Produtos" style="text-decoration: none">
+									<i class="bi bi-cart-plus text-success "></i>
+								</a>
+
 							</td>
 						</tr>
 
@@ -115,17 +132,17 @@ if (@$_GET['funcao'] == "editar") {
 						<div class="col-md-4">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Código</label>
-								<input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo do produto" required="" value="<?php echo @$codigo ?>">
+								<input type="number" class="form-control" id="codigo" name="codigo" placeholder="Codigo do produto" required="" value="<?php echo @$codigo ?>">
 							</div>
 						</div>
-					
+
 						<div class="col-md-4">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Nome</label>
 								<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required="" value="<?php echo @$nome ?>">
 							</div>
 						</div>
-					
+
 						<div class="col-md-4">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Valor Venda</label>
@@ -136,7 +153,7 @@ if (@$_GET['funcao'] == "editar") {
 
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">Descrição do Produto</label>
-						<textarea type="text" class="form-control" id="descricao" name="descricao" maxlength="200"> <?php echo @$descricao ?></textarea>
+						<textarea type="text" class="form-control" id="descricao" name="descricao" maxlength="200"><?php echo @$descricao ?></textarea>
 					</div>
 
 					<div class="row">
@@ -145,7 +162,23 @@ if (@$_GET['funcao'] == "editar") {
 								<label for="exampleFormControlInput1" class="form-label">Categoria</label>
 								<select class="form-select mt-1" aria-label="Default select example" name="categoria">
 
-									<option <?php if (@$tipo == 'Física') { ?> selected <?php } ?> value="Física">Física</option>
+									<!-- BLOCO PARA BUSCAR AS CATEGORIAS NO BANCO -->
+									<?php
+									$query = $pdo->query("SELECT * from categorias order by nome asc");
+									$res = $query->fetchAll(PDO::FETCH_ASSOC);
+									$total_reg = @count($res);
+									if ($total_reg > 0) {
+										for ($i = 0; $i < $total_reg; $i++) {
+											foreach ($res[$i] as $key => $value) {
+											}
+									?>
+											<option <?php if (@$categoria == $res[$i]['id']) { ?> selected <?php } ?> value="<?php echo $res[$i]['id'] ?>">
+												<?php echo $res[$i]['nome'] ?>
+											</option>
+									<?php }
+									} else {
+										echo '<option value=""> Cadastre uma Categoria </option>';
+									} ?>
 
 								</select>
 							</div>
@@ -156,18 +189,25 @@ if (@$_GET['funcao'] == "editar") {
 								<label>Foto</label>
 								<input type="file" value="<?php echo @$foto ?>" class="form-control-file" id="imagem" name="imagem" onChange="carregarImg();">
 							</div>
-
+						</div>
+						<div class="col-md-4">
 							<div id="divImgConta" class="mt-4">
 								<?php if (@$foto != "") { ?>
-								<img src="../img/categorias/<?php echo $foto ?>" width="200px" id="target">
+									<img src="../img/<?php echo $pag ?>/<?php echo $foto ?>" width="150px" id="target">
 								<?php  } else { ?>
-								<img src="../img/categorias/sem-foto.jpg" width="200px" id="target">
+									<img src="../img/<?php echo $pag ?>/sem-foto.jpg" width="150px" id="target">
 								<?php } ?>
 							</div>
 						</div>
 					</div>
 
-					
+					<!--DIV ONDE VAI SER GERADO O CODIGO DE BARRAS -->
+					<div>
+						<label for="exampleFormControlInput1" class="form-label">Codigo de Barras: </label>
+						<div id="codigoBarra">
+
+						</div>
+					</div>
 
 					<small>
 						<div align="center" class="mt-1" id="mensagem">
@@ -216,7 +256,7 @@ if (@$_GET['funcao'] == "editar") {
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="btn-fechar" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button type="button" id="btn-fechar-excluir" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
 					<button name="btn-excluir" id="btn-excluir" type="submit" class="btn btn-danger">Excluir</button>
 
 					<input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>">
@@ -232,7 +272,7 @@ if (@$_GET['funcao'] == "editar") {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Dados do Fornecedor</h5>
+				<h5 class="modal-title"><span id="nome-registro"></span></h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
@@ -241,12 +281,96 @@ if (@$_GET['funcao'] == "editar") {
 				<b>Categoria: </b>
 				<span id="categoria-registro"></span>
 				<hr>
+
+				<!-- BLOCO PARA OCULTAR DADOS DOS FORNECEDORES CASO NAO EXISTA CADASTRO -->
+				<div id="div-forn">
+					<span class="mr-4">
+						<b>Fornecedor: </b>
+						<span id="nome-forn-registro"></span>
+					</span>
+
+					<span class="mr-4">
+						<b>Telefone: </b>
+						<span id="tel-forn-registro"></span>
+					</span>
+					<hr>
+				</div>
+
 				<b>Descrição: </b>
 				<span id="descricao-registro"></span>
 				<hr>
 				<img id="imagem-registro" src="" class="mt-4" width="200">
 			</div>
 
+		</div>
+	</div>
+</div>
+
+<!-- MODAL PARA COMPRA DE PRODUTOS -->
+<div class="modal fade" tabindex="-1" id="modalComprar">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Comprar Produto</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="POST" id="form-comprar">
+				<div class="modal-body">
+
+					<div class="mb-3">
+						<label for="exampleFormControlInput1" class="form-label">Fornecedor</label>
+						<select class="form-select mt-1" aria-label="Default select example" name="fornecedor">
+
+							<!-- BLOCO PARA BUSCAR OS FORNECEDORES NO BANCO -->
+							<?php
+							$query = $pdo->query("SELECT * from fornecedores order by nome asc");
+							$res = $query->fetchAll(PDO::FETCH_ASSOC);
+							$total_reg = @count($res);
+							if ($total_reg > 0) {
+								for ($i = 0; $i < $total_reg; $i++) {
+									foreach ($res[$i] as $key => $value) {
+									}
+							?>
+									<option value="<?php echo $res[$i]['id'] ?>">
+										<?php echo $res[$i]['nome'] ?>
+									</option>
+							<?php }
+							} else {
+								echo '<option value=""> Cadastre um Fornecedor </option>';
+							} ?>
+						</select>
+					</div>
+
+					<div class="row">
+						<div class="col-6">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">Valor Compra</label>
+								<input type="text" class="form-control" id="valor_compra" name="valor_compra" placeholder="Valor Compra" required="">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="mb-3">
+								<label for="exampleFormControlInput1" class="form-label">Quantidade</label>
+								<input type="number" class="form-control" id="quantidade" name="quantidade" placeholder="Quantidade" required="">
+							</div>
+						</div>
+					</div>
+
+					<small>
+						<div align="center" class="mt-1" id="mensagem-comprar">
+
+						</div>
+					</small>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="btn-fechar-comprar" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button name="btn-salvar-comprar" id="btn-salvar-comprar" type="submit" class="btn btn-primary">Salvar</button>
+
+					<input name="id-comprar" id="id-comprar" type="hidden">
+
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -387,6 +511,7 @@ if (@$_GET['funcao'] == "deletar") { ?>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		gerarCodigo();
 		$('#example').DataTable({
 			"ordering": false
 		});
@@ -421,11 +546,20 @@ if (@$_GET['funcao'] == "deletar") { ?>
 </script>
 
 <script type="text/javascript">
-	function mostrarDados(descricao, foto, categoria) {
+	function mostrarDados(nome, descricao, foto, categoria, nome_forn, tel_forn) {
 		event.preventDefault();
 
+		if (tel_forn.trim() === "") {
+			document.getElementById("div-forn").style.display = 'none';
+		} else {
+			document.getElementById("div-forn").style.display = 'block';
+		}
+
+		$('#nome-registro').text(nome);
 		$('#categoria-registro').text(categoria);
 		$('#descricao-registro').text(descricao);
+		$('#nome-forn-registro').text(nome_forn);
+		$('#tel-forn-registro').text(tel_forn);
 		$('#imagem-registro').attr('src', '../img/produtos/' + foto);
 
 		var myModal = new bootstrap.Modal(document.getElementById('modalDados'), {
@@ -434,4 +568,91 @@ if (@$_GET['funcao'] == "deletar") { ?>
 
 		myModal.show();
 	}
+</script>
+
+<!--AJAX PARA O CODIGO DE BARRAS -->
+<script type="text/javascript">
+	$("#codigo").keyup(function() {
+		gerarCodigo();
+	});
+</script>
+
+<script type="text/javascript">
+	var pag = "<?= $pag ?>";
+
+	function gerarCodigo() {
+		$.ajax({
+			url: pag + "/barras.php",
+			method: 'POST',
+			data: $('#form').serialize(),
+			dataType: "html",
+
+			success: function(resultt) {
+				$("#codigoBarra").html(resultt);
+			}
+		});
+	}
+</script>
+
+
+<!-- FUNÇÃO PARA COMPRAR PRODUTOS -->
+<script type="text/javascript">
+	function comprarProdutos(id) {
+		event.preventDefault();
+
+		$('#id-comprar').val(id);
+
+		var myModal = new bootstrap.Modal(document.getElementById('modalComprar'), {
+
+		})
+		myModal.show();
+	}
+</script>
+
+<!--AJAX PARA COMPRA -->
+<script type="text/javascript">
+	$("#form-comprar").submit(function() {
+		var pag = "<?= $pag ?>";
+		event.preventDefault();
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: pag + "/comprar-produto.php",
+			type: 'POST',
+			data: formData,
+
+			success: function(mensagem) {
+
+				$('#mensagem-comprar').removeClass()
+
+				if (mensagem.trim() == "Salvo com Sucesso!") {
+
+					//$('#nome').val('');
+					//$('#cpf').val('');
+					$('#btn-fechar').click();
+					window.location = "index.php?pagina=" + pag;
+
+				} else {
+
+					$('#mensagem-comprar').addClass('text-danger')
+				}
+
+				$('#mensagem-comprar').text(mensagem)
+
+			},
+
+			cache: false,
+			contentType: false,
+			processData: false,
+			xhr: function() { // Custom XMLHttpRequest
+				var myXhr = $.ajaxSettings.xhr();
+				if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
+					myXhr.upload.addEventListener('progress', function() {
+						/* faz alguma coisa durante o progresso do upload */
+					}, false);
+				}
+				return myXhr;
+			}
+		});
+	});
 </script>

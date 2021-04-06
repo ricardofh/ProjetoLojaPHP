@@ -38,7 +38,7 @@ require_once('verificar-permissao.php')
 							<td><?php echo $res[$i]['nome'] ?></td>
 							<td></td>
 
-							<td><img src="../img/categorias/<?php echo $res[$i]['foto'] ?>" width="40"></td>
+							<td><img src="../img/<?php echo $pag ?>/<?php echo $res[$i]['foto'] ?>" width="40"></td>
 							<td>
 								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
 									<i class="bi bi-pencil-square text-primary"></i>
@@ -103,9 +103,9 @@ if (@$_GET['funcao'] == "editar") {
 
 					<div id="divImgConta" class="mt-4">
 						<?php if (@$foto != "") { ?>
-							<img src="../img/categorias/<?php echo $foto ?>" width="200px" id="target">
+							<img src="../img/<?php echo $pag ?>/<?php echo $foto ?>" width="200px" id="target">
 						<?php  } else { ?>
-							<img src="../img/categorias/sem-foto.jpg" width="200px" id="target">
+							<img src="../img/<?php echo $pag ?>/sem-foto.jpg" width="200px" id="target">
 						<?php } ?>
 					</div>
 

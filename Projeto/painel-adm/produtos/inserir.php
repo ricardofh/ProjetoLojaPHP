@@ -2,19 +2,24 @@
 require_once("../../conexao.php");
 
 $nome = $_POST['nome'];
+$codigo = $_POST['codigo'];
+$valor_venda = $_POST['valor_venda'];
+$valor_venda = str_replace(',', '.', $valor_venda);
+$descricao = $_POST['descricao'];
+$categoria = $_POST['categoria'];
 $id = $_POST['id'];
 
 $antigo = $_POST['antigo'];
 
 
-// EVITAR DUPLICIDADE NO NOME DA CAT
+// EVITAR DUPLICIDADE NO NOME DO PRODUTO
 if($antigo != $nome){
-	$query_con = $pdo->prepare("SELECT * from categorias WHERE nome = :nome");
+	$query_con = $pdo->prepare("SELECT * from produtos WHERE nome = :nome");
 	$query_con->bindValue(":nome", $nome);
 	$query_con->execute();
 	$res_con = $query_con->fetchAll(PDO::FETCH_ASSOC);
 	if(@count($res_con) > 0){
-		echo 'Categoria já Cadastrada!';
+		echo 'Produto já Cadastrado!';
 		exit();
 	}
 }
@@ -26,7 +31,7 @@ if($antigo != $nome){
 $nome_img =  date('d-m-Y H:i:s') . '-' .  @$_FILES['imagem']['name'];
 $nome_img = preg_replace('/[ :]+/' , '-' , $nome_img);
 
-$caminho = '../../img/categorias/' .$nome_img;
+$caminho = '../../img/produtos/' .$nome_img;
 if (@$_FILES['imagem']['name'] == ""){
   $imagem = "sem-foto.jpg";
 }else{
@@ -45,22 +50,34 @@ move_uploaded_file($imagem_temp, $caminho);
 
 
 if($id == ""){
-	$res = $pdo->prepare("INSERT INTO categorias SET nome = :nome, foto = :foto");
+	$res = $pdo->prepare("INSERT INTO produtos SET codigo = :codigo, nome = :nome, descricao = :descricao, 
+	valor_venda = :valor_venda, categoria = :categoria, foto = :foto");
+	$res->bindValue(":codigo", $codigo);
 	$res->bindValue(":nome", $nome);
+	$res->bindValue(":descricao", $descricao);
+	$res->bindValue(":valor_venda", $valor_venda);
+	$res->bindValue(":categoria", $categoria);
 	$res->bindValue(":foto", $imagem);
+
 	$res->execute();
 }else{
 
 	if($imagem != 'sem-foto.jpg'){
-		$res = $pdo->prepare("UPDATE categorias SET nome = :nome, foto = :foto WHERE id = :id");
+		$res = $pdo->prepare("UPDATE produtos SET codigo = :codigo, nome = :nome, descricao = :descricao, 
+		valor_venda = :valor_venda, categoria = :categoria, foto = :foto WHERE id = :id");
 		$res->bindValue(":foto", $imagem);
 	}else{
-		$res = $pdo->prepare("UPDATE categorias SET nome = :nome WHERE id = :id");
+		$res = $pdo->prepare("UPDATE produtos SET codigo = :codigo, nome = :nome, descricao = :descricao, 
+		valor_venda = :valor_venda, categoria = :categoria WHERE id = :id");
 	}
 
-	
+	$res->bindValue(":codigo", $codigo);
 	$res->bindValue(":nome", $nome);
+	$res->bindValue(":descricao", $descricao);
+	$res->bindValue(":valor_venda", $valor_venda);
+	$res->bindValue(":categoria", $categoria);
 	$res->bindValue(":id", $id);
+	
 	$res->execute();
 }
 
