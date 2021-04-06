@@ -124,9 +124,11 @@ if (@$_GET['funcao'] == "editar") {
 						<input type="email" class="form-control" id="email" name="email" placeholder="Email" required="" value="<?php echo @$email ?>">
 					</div>
 
+					<div id="div-pass">
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">Senha</label>
 						<input type="text" class="form-control" id="senha" name="senha" placeholder="Senha" required="" value="<?php echo @$senha ?>">
+					</div>
 					</div>
 
 					<div class="mb-3">
@@ -218,11 +220,21 @@ if (@$_GET['funcao'] == "novo") { ?>
 <?php
 if (@$_GET['funcao'] == "editar") { ?>
 	<script type="text/javascript">
+		
+		//BLOCO PARA OCULTAR EXBIÇÃO DA SENHA NA MODAL DE EDIÇÃO
+		if (senha != " ") {
+			document.getElementById("div-pass").style.display = 'none';
+		} else {
+			document.getElementById("div-pass").style.display = 'block';
+		}
+		
 		var myModal = new bootstrap.Modal(document.getElementById('modalCadastrar'), {
 			backdrop: 'static'
 		})
 
 		myModal.show();
+
+		
 	</script>
 <?php } ?>
 
