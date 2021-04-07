@@ -57,16 +57,14 @@ $id_usu = $res[0]['id'];
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="index.php">
-        <img src="../img/logo2.png" width="100">
+        <img src="../img/logo3.png" width="100">
+        HOME
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.php?pagina=<?php echo $menu1 ?>">Home</a>
-          </li>
           <li class="nav-item">
             <a class="nav-link" href="index.php?pagina=<?php echo $menu2 ?>">Usuários</a>
           </li>
@@ -92,9 +90,9 @@ $id_usu = $res[0]['id'];
               Relatórios
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" target="_blank" href="../rel/relProdutos_class.php">Relatório de Produtos</a></li>              
-              <li><a class="dropdown-item" target="_blank" href="../rel/relProdutos_class.php">Relatório de Compras</a></li>              
-            </ul> 
+              <li><a class="dropdown-item" target="_blank" href="../rel/relProdutos_class.php">Relatório de Produtos</a></li>
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ModalRelCompras" href="">Relatório de Compras</a></li>
+            </ul>
           </li>
 
         </ul>
@@ -143,7 +141,7 @@ $id_usu = $res[0]['id'];
     } else if (@$_GET['pagina'] == $menu5) {
       require_once($menu5 . '.php');
     } else if (@$_GET['pagina'] == $menu6) {
-        require_once($menu6 . '.php');
+      require_once($menu6 . '.php');
     } else {
       require_once($menu1 . '.php');
     }
@@ -191,6 +189,67 @@ $id_usu = $res[0]['id'];
     </div>
   </div>
 </div>
+
+
+
+<!--  MoODAL DO RELATORIO DE COMPRAS-->
+<div class="modal fade" tabindex="-1" id="ModalRelCompras">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title"> Relatório Compras</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form action="../rel/relCompras_class.php" method="POST" target="_blank">
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group mt-1">
+                <label>Data Inicial</label>
+                <input value="<?php echo date('Y-m-d') ?>" type="date" class="form-control" name="dataInicial">
+              </div>
+            </div>
+            <div class="col-md-4">
+
+              <div class="form-group mb-3 mt-1">
+                <label>Data Final</label>
+                <input value="<?php echo date('Y-m-d') ?>" type="date" class="form-control" name="dataFinal">
+              </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+
+              <div class="form-group mb-3">
+                <label>Pago</label>
+                <select class="form-select mt-1"  name="status">
+                  <option value="">Todas</option>
+                  <option value="Sim">Sim</option>
+                  <option value="Não">Não</option>
+
+                </select>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+        </div>
+      
+      </form>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- MASCARAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>

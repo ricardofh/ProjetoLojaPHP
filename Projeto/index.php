@@ -40,7 +40,7 @@
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
 				<form class="login100-form validate-form" method="POST" action="autenticar.php">
 					<span class="login100-form-title p-b-33">
-						<img src="img/logo2.png" >
+						<img src="img/logo3.png" >
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Email ou CPF" required="">
