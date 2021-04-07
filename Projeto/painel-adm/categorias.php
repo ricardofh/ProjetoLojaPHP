@@ -32,11 +32,16 @@ require_once('verificar-permissao.php')
 					for ($i = 0; $i < $total_reg; $i++) {
 						foreach ($res[$i] as $key => $value) {
 						}
+
+						$id_cat = $res[$i]['id'];
+						$query_p = $pdo->query("SELECT * from produtos WHERE categoria ='$id_cat' ");
+						$res_p = $query_p->fetchAll(PDO::FETCH_ASSOC);
+						$produtos = @count($res_p);
 					?>
 
 						<tr>
 							<td><?php echo $res[$i]['nome'] ?></td>
-							<td></td>
+							<td><?php echo $produtos ?></td>
 
 							<td><img src="../img/<?php echo $pag ?>/<?php echo $res[$i]['foto'] ?>" width="40"></td>
 							<td>

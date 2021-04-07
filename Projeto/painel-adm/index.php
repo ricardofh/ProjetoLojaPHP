@@ -14,6 +14,7 @@ $menu2 = 'usuarios';
 $menu3 = 'fornecedores';
 $menu4 = 'categorias';
 $menu5 = 'produtos';
+$menu6 = 'compras';
 
 //RECUPERAR DADOS DO USSUARIO
 $query = $pdo->query("SELECT * from usuarios WHERE id = '$_SESSION[id_usuario]'");
@@ -82,8 +83,18 @@ $id_usu = $res[0]['id'];
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><a class="dropdown-item" href="index.php?pagina=<?php echo $menu6 ?>">Lista de Compras</a></li>
             </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Relatórios
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" target="_blank" href="../rel/relProdutos_class.php">Relatório de Produtos</a></li>              
+              <li><a class="dropdown-item" target="_blank" href="../rel/relProdutos_class.php">Relatório de Compras</a></li>              
+            </ul> 
           </li>
 
         </ul>
@@ -131,6 +142,8 @@ $id_usu = $res[0]['id'];
       require_once($menu4 . '.php');
     } else if (@$_GET['pagina'] == $menu5) {
       require_once($menu5 . '.php');
+    } else if (@$_GET['pagina'] == $menu6) {
+        require_once($menu6 . '.php');
     } else {
       require_once($menu1 . '.php');
     }

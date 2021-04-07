@@ -17,7 +17,10 @@ if(@count($res_p) > 0){
 
 //EXCLUIR IMAGEM DA PASTA
 $imagem = $res_con[0]['foto'];
-unlink('../../img/categorias/' .$imagem);
+
+if($imagem != 'sem-foto.jpg'){
+    unlink('../../img/categorias/' .$imagem);
+}
 
 $query_con = $pdo->query("DELETE from categorias WHERE id = '$id'");
 
