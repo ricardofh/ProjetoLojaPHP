@@ -43,16 +43,16 @@ require_once('verificar-permissao.php')
 							<td><?php echo $res[$i]['email'] ?></td>
 							<td><?php echo $res[$i]['telefone'] ?></td>
 							<td>
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
-									<i class="bi bi-pencil-square text-primary"></i>
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro" style="text-decoration: none">
+									<i class="bi bi-pencil-square text-primary mx-1"></i>
 								</a>
 
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro " style="text-decoration: none">
 									<i i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 
-								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['endereco'] ?>', '<?php echo $res[$i]['nome'] ?>')" title="Mais informações">
-									<i class="bi bi-card-list text-dark"></i></i>
+								<a href="#" onclick="mostrarDados('<?php echo $res[$i]['endereco'] ?>', '<?php echo $res[$i]['nome'] ?>')" title="Mais informações" style="text-decoration: none">
+									<i class="bi bi-card-list text-dark mx-1"></i></i>
 								</a>
 
 							</td>

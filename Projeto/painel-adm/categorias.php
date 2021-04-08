@@ -45,11 +45,11 @@ require_once('verificar-permissao.php')
 
 							<td><img src="../img/<?php echo $pag ?>/<?php echo $res[$i]['foto'] ?>" width="40"></td>
 							<td>
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro">
-									<i class="bi bi-pencil-square text-primary"></i>
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=editar&id=<?php echo $res[$i]['id'] ?>" title="Editar Registro" style="text-decoration: none">
+									<i class="bi bi-pencil-square text-primary mx-1"></i>
 								</a>
 
-								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro">
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro" style="text-decoration: none">
 									<i i class="bi bi-x-square text-danger mx-1"></i>
 								</a>
 							</td>

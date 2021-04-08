@@ -183,7 +183,7 @@ if ($dataInicial != $dataFinal) {
 
 		<div class="row titulos">
 			<div class="col-sm-2 esquerda_float image">
-				<img src="<?php echo $url_sistema ?>img/logoRel.jpg" width="90px">
+				<img src="<?php echo $url_sistema ?>img/logoRel.jpg" width="130px">
 			</div>
 			<div class="col-sm-10 esquerda_float">
 				<h2 class="titulo"><b><?php echo strtoupper($nome_sistema) ?></b></h2>

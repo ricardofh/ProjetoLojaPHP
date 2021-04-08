@@ -10,9 +10,9 @@ require_once('verificar-permissao.php');
 
 //MENU ADMINISTRATIVO
 $menu1 = 'home';
-$menu2 = 'usuarios';
-$menu3 = 'fornecedores';
-$menu4 = 'categorias';
+$menu2 = 'contas_pagar';
+$menu3 = 'contas_receber';
+$menu4 = 'movimentacoes';
 $menu5 = 'produtos';
 $menu6 = 'compras';
 
@@ -32,7 +32,7 @@ $id_usu = $res[0]['id'];
 <html>
 
 <head>
-  <title>Painel Administrativo</title>
+  <title>Painel Financeiro</title>
 
   <!-- BOOTSTRAP, DATATABLE E JQUERY -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -66,10 +66,10 @@ $id_usu = $res[0]['id'];
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="index.php?pagina=<?php echo $menu2 ?>">Usuários</a>
+            <a class="nav-link" href="index.php?pagina=<?php echo $menu2 ?>">Contas Pagar</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.php?pagina=<?php echo $menu3 ?>">Fornecedores</a>
+            <a class="nav-link" href="index.php?pagina=<?php echo $menu3 ?>">Contas Receber</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

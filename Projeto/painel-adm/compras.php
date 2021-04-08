@@ -27,6 +27,7 @@ require_once('verificar-permissao.php')
                         <th>Usuario</th>
                         <th>Fornecedor</th>
                         <th>Tel Fornecedor</th>
+						<th>Excluir</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -90,6 +91,13 @@ require_once('verificar-permissao.php')
                             <td><?php echo $nome_usuario ?></td>
                             <td><?php echo $nome_forn ?></td>
                             <td><?php echo $tel_forn ?></td>
+							<td>
+							<?php if($res[$i]['pago'] != 'Sim'){ ?>
+								<a href="index.php?pagina=<?php echo $pag ?>&funcao=deletar&id=<?php echo $res[$i]['id'] ?>" title="Excluir Registro" style="text-decoration: none">
+									<i i class="bi bi-x-square text-danger mx-1"></i>
+								</a>
+							<?php } ?>	
+							</td>
 
 						</tr>
 
@@ -103,6 +111,89 @@ require_once('verificar-permissao.php')
 		echo '<p>Não existem dados para serem exibidos!!';
 	} ?>
 </div>
+
+<div class="modal fade" tabindex="-1" id="modalDeletar">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Excluir Registro</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="POST" id="form-excluir">
+				<div class="modal-body">
+
+					<p>Deseja Realmente Excluir o Registro?</p>
+
+					<small>
+						<div align="center" class="mt-1" id="mensagem-excluir">
+
+						</div>
+					</small>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="btn-fechar" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+					<button name="btn-excluir" id="btn-excluir" type="submit" class="btn btn-danger">Excluir</button>
+
+					<input name="id" type="hidden" value="<?php echo @$_GET['id'] ?>">
+
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<?php
+if (@$_GET['funcao'] == "deletar") { ?>
+	<script type="text/javascript">
+		var myModal = new bootstrap.Modal(document.getElementById('modalDeletar'), {
+
+		})
+
+		myModal.show();
+	</script>
+<?php } ?>
+
+<script type="text/javascript">
+	$("#form-excluir").submit(function() {
+		var pag = "<?= $pag ?>";
+		event.preventDefault();
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: pag + "/excluir.php",
+			type: 'POST',
+			data: formData,
+
+			success: function(mensagem) {
+
+				$('#mensagem').removeClass()
+
+				if (mensagem.trim() == "Excluído com Sucesso!") {
+
+					$('#mensagem-excluir').addClass('text-success')
+
+					$('#btn-fechar').click();
+					window.location = "index.php?pagina=" + pag;
+
+				} else {
+
+					$('#mensagem-excluir').addClass('text-danger')
+				}
+
+				$('#mensagem-excluir').text(mensagem)
+
+			},
+
+			cache: false,
+			contentType: false,
+			processData: false,
+
+		});
+	});
+</script>
+
 
 <script type="text/javascript">
 	$(document).ready(function() {

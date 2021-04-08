@@ -29,8 +29,8 @@ if (@count($res_con) > 0) {
         echo "<script language='javascript'>window.location='painel-operador'</script>";
     }
 
-    if ($nivel == 'Tesoureiro') {
-        echo "<script language='javascript'>window.location='painel-tesoureiro'</script>";
+    if ($nivel == 'Financeiro') {
+        echo "<script language='javascript'>window.location='painel-financeiro'</script>";
     }
 } else {
 
