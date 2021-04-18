@@ -1,5 +1,5 @@
 <?php
-$pag = 'contas_pagar';
+$pag = 'contas_receber';
 @session_start();
 
 require_once('../conexao.php');
@@ -11,7 +11,7 @@ require_once('verificar-permissao.php')
 
 <div class="mt-4" style="margin-right:25px">
 	<?php
-	$query = $pdo->query("SELECT * from contas_pagar order by pago asc, vencimento asc ");
+	$query = $pdo->query("SELECT * from contas_receber order by id desc");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
@@ -104,7 +104,7 @@ require_once('verificar-permissao.php')
 <?php
 if (@$_GET['funcao'] == "editar") {
 	$titulo_modal = 'Editar Registro';
-	$query = $pdo->query("SELECT * from contas_pagar where id = '$_GET[id]'");
+	$query = $pdo->query("SELECT * from contas_receber where id = '$_GET[id]'");
 	$res = $query->fetchAll(PDO::FETCH_ASSOC);
 	$total_reg = @count($res);
 	if ($total_reg > 0) {
@@ -157,9 +157,6 @@ if (@$_GET['funcao'] == "editar") {
 							</div>	
 						</div>
 					</div>
-					
-
-
 
 
 					<div class="form-group">

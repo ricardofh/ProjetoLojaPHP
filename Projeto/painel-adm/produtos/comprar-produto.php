@@ -49,7 +49,7 @@ $res->execute();
 $id_compra = $pdo->lastInsertId();
 
 //BANCO DE CONTAS À PAGAR
-$res = $pdo->prepare("INSERT contas_pagar SET descricao = 'Compra de produtos', valor = :valor, data = curDate(), usuario = :usuario, pago = 'Não', arquivo = 'sem-foto.jpg', id_compra = '$id_compra'");
+$res = $pdo->prepare("INSERT contas_pagar SET vencimento = curDate(), descricao = 'Compra de produtos', valor = :valor, data = curDate(), usuario = :usuario, pago = 'Não', arquivo = 'sem-foto.jpg', id_compra = '$id_compra'");
 $res->bindValue(":usuario", $id_usuario);
 $res->bindValue(":valor", $total_compra);
 

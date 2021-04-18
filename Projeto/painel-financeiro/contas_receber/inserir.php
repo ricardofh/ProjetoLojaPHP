@@ -9,18 +9,13 @@ $valor = $_POST['valor'];
 $vencimento = $_POST['vencimento'];
 $id = $_POST['id'];
 
-$query = $pdo->query("SELECT * from contas_pagar WHERE id = '$id'");
+$query = $pdo->query("SELECT * from contas_receber WHERE id = '$id'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);
 if($total_reg > 0){
 	$pago = $res[0]['pago'];
-	$descricao = $res[0]['descricao'];
 	if($pago == 'Sim'){
 		echo 'Essa conta já está paga, não é permitida sua edição';
-		exit();
-	}
-	if($descricao == 'Compra de produtos'){
-		echo 'Não é permitida a edição dessa conta';
 		exit();
 	}
 }
@@ -30,7 +25,7 @@ if($total_reg > 0){
 $nome_img =  date('d-m-Y H:i:s') . '-' .  @$_FILES['imagem']['name'];
 $nome_img = preg_replace('/[ :]+/' , '-' , $nome_img);
 
-$caminho = '../../img/contas_pagar/' .$nome_img;
+$caminho = '../../img/contas_receber/' .$nome_img;
 if (@$_FILES['imagem']['name'] == ""){
   $imagem = "sem-foto.jpg";
 }else{
@@ -49,7 +44,7 @@ move_uploaded_file($imagem_temp, $caminho);
 
 
 if($id == ""){
-	$res = $pdo->prepare("INSERT INTO contas_pagar SET vencimento = :vencimento, pago = 'Não', data = curDate(), usuario = '$id_usuario', descricao = :descricao, valor = :valor, arquivo = :arquivo");
+	$res = $pdo->prepare("INSERT INTO contas_receber SET vencimento = :vencimento, pago = 'Não', data = curDate(), usuario = '$id_usuario', descricao = :descricao, valor = :valor, arquivo = :arquivo");
 	$res->bindValue(":descricao", $descricao);
 	$res->bindValue(":valor", $valor);
 	$res->bindValue(":arquivo", $imagem);
@@ -59,10 +54,10 @@ if($id == ""){
 }else{
 
 	if($imagem != 'sem-foto.jpg'){
-		$res = $pdo->prepare("UPDATE contas_pagar SET vencimento = :vencimento,  usuario = '$id_usuario', descricao = :descricao, valor = :valor, arquivo = :arquivo WHERE id = :id");
+		$res = $pdo->prepare("UPDATE contas_receber SET vencimento = :vencimento,  usuario = '$id_usuario', descricao = :descricao, valor = :valor, arquivo = :arquivo WHERE id = :id");
 		$res->bindValue(":arquivo", $imagem);
 	}else{
-		$res = $pdo->prepare("UPDATE contas_pagar SET vencimento = :vencimento, pago = 'Não', data = curDate(), usuario = '$id_usuario', descricao = :descricao, valor = :valor WHERE id = :id");
+		$res = $pdo->prepare("UPDATE contas_receber SET vencimento = :vencimento, pago = 'Não', data = curDate(), usuario = '$id_usuario', descricao = :descricao, valor = :valor WHERE id = :id");
 	}
 
 	$res->bindValue(":descricao", $descricao);
