@@ -15,6 +15,7 @@ $menu3 = 'fornecedores';
 $menu4 = 'categorias';
 $menu5 = 'produtos';
 $menu6 = 'compras';
+$menu7 = 'caixas';
 
 //RECUPERAR DADOS DO USSUARIO
 $query = $pdo->query("SELECT * from usuarios WHERE id = '$_SESSION[id_usuario]'");
@@ -70,6 +71,9 @@ $id_usu = $res[0]['id'];
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.php?pagina=<?php echo $menu3 ?>">Fornecedores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php?pagina=<?php echo $menu7 ?>">Caixas</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -142,6 +146,8 @@ $id_usu = $res[0]['id'];
       require_once($menu5 . '.php');
     } else if (@$_GET['pagina'] == $menu6) {
       require_once($menu6 . '.php');
+    } else if (@$_GET['pagina'] == $menu7) {
+      require_once($menu7 . '.php');
     } else {
       require_once($menu1 . '.php');
     }

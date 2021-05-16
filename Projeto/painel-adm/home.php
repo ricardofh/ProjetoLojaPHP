@@ -14,7 +14,8 @@ echo $_SESSION['nome_usuario'];*/
 	<section id="minimal-statistics">
 		<div class="row">
 			<div class="col-12 mt-3 mb-1">
-				<h4 class="text-uppercase">Minimal Statistics Cards</h4>
+				<h4 class="text-uppercase">HOME PAGE</h4>
+				<!--
 				<p>Statistics on minimal cards.</p>
 			</div>
 		</div>
@@ -285,4 +286,5 @@ echo $_SESSION['nome_usuario'];*/
 
 	</section>
 </div>
+-->
 

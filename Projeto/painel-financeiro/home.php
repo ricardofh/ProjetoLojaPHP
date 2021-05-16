@@ -442,7 +442,7 @@ if ($total_reg > 0) {
 
 	</section>
 
-
+<!--
 	<section id="stats-subtitle">
 		<div class="row mb-2">
 			<div class="col-12 mt-3 mb-1">
@@ -522,3 +522,4 @@ if ($total_reg > 0) {
 
 
 </div>
+-->
