@@ -7,6 +7,7 @@ $url_sistema = "http://localhost:8080/ProjetoLojaPHP/Projeto/";
 $telefone_sistema = "(xx)xxxxx-xxxx";
 $endereco_sistema = "Rua XXXX Nº X Bairro XXX - Osasco - SP";
 $rodape_relatorios = "Sistema Web Desenvolvido por Ricardo Homero";
+$cnpj_sistema = "XX.XXXX.XXX.XXXX";
 
 
 //VARIAVEIS PARA O BANCO DE DADOS LOCAL

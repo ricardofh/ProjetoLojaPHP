@@ -11,9 +11,31 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);
 if($total_reg > 0){ 
 	$aberto = 'Sim';
+	$caixa = $res[0]['caixa'];
+	$id_abertura = $res[0]['id'];
+	$valor_abertura = $res[0]['valor_ab'];
+
+	//TOTALIZAR VENDA PARA DEFINIR QUEBRA
+	$valor_vendido = 0;
+	$query = $pdo->query("SELECT * from vendas where operador = '$id_usuario' and abertura = '$id_abertura' ");
+	$res = $query->fetchAll(PDO::FETCH_ASSOC);
+	$total_reg = @count($res);
+	if($total_reg > 0){
+		for($i=0; $i < $total_reg; $i++){
+			foreach ($res[$i] as $key => $value){	}
+
+				$valor_vendido += $res[$i]['valor'];
+		}
+	}
+
+	$valor_tot = $valor_abertura + $valor_vendido;
+
 }else{
 	$aberto = 'Não';
 }
+
+
+
 
 ?>
 
@@ -151,36 +173,15 @@ if($total_reg > 0){
 						<div class="col-md-6">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Caixa</label>
+								<input type="text" class="form-control" id="caixa_fec" name="caixa_fec" value="<?php echo $caixa ?>" readonly required="" >
 								
-								<select class="form-select mt-1" aria-label="Default select example" name="caixa">
-									<?php 
-									$query = $pdo->query("SELECT * from caixas order by nome asc");
-									$res = $query->fetchAll(PDO::FETCH_ASSOC);
-									$total_reg = @count($res);
-									if($total_reg > 0){ 
-
-										for($i=0; $i < $total_reg; $i++){
-											foreach ($res[$i] as $key => $value){	}
-												?>
-
-											<option value="<?php echo $res[$i]['id'] ?>"><?php echo $res[$i]['nome'] ?></option>
-
-										<?php }
-
-									}else{ 
-										echo '<option value="">Cadastre um Caixa</option>';
-
-									} ?>
-									
-
-								</select>
 
 							</div> 
 						</div>
 						<div class="col-md-6">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Gerente</label>
-								<select class="form-select mt-1" aria-label="Default select example" name="gerente">
+								<select class="form-select mt-1" aria-label="Default select example" name="gerente_fec">
 									<?php 
 									$query = $pdo->query("SELECT * from usuarios where nivel = 'Administrador' order by nome asc");
 									$res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -212,22 +213,22 @@ if($total_reg > 0){
 					<div class="row">
 						<div class="col-md-6">
 							<div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">Valor Abertura</label>
-								<input type="text" class="form-control" id="valor_ab-fechamento" name="valor_ab-fechamento" placeholder="Valor da Abertura" required="" >
+								<label for="exampleFormControlInput1" class="form-label">Valor Fechamento</label>
+								<input type="text" class="form-control" id="valor_fec" name="valor_fec" placeholder="Total do Caixa" required="" value="<?php echo @$valor_tot ?>">
 							</div> 
 						</div>
 
 						<div class="col-md-6">
 							<div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">Senha Gerente</label>
-								<input type="password" class="form-control" id="senha_gerente-fechamento" name="senha_gerente-fechamento" placeholder="Senha Gerente" required="" >
+								<input type="password" class="form-control" id="senha_gerente_fec" name="senha_gerente_fec" placeholder="Senha Gerente" required="" >
 							</div> 
 						</div>
 					</div>
 
 					
 
-					<small><div align="center" class="mt-1" id="mensagem-abertura">
+					<small><div align="center" class="mt-1" id="mensagem-fechamento">
 						
 					</div> </small>
 
@@ -236,9 +237,9 @@ if($total_reg > 0){
 
 					<a href="pdv.php" class="btn btn-primary">Voltar PDV</a>
 					
-					<button name="btn-salvar-perfil-fechamento" id="btn-salvar-abertura-fechamento" type="submit" class="btn btn-danger">Fechar Caixa</button>
+					<button name="btn-salvar-fechamento" id="btn-salvar-fechamento" type="submit" class="btn btn-danger">Fechar Caixa</button>
 
-					<input name="id-abertura" type="hidden" value="<?php echo @$id_usu ?>">
+					<input name="id-fechamento" type="hidden" value="<?php echo @$id_usu ?>">
 
 					
 
@@ -255,12 +256,12 @@ if($total_reg > 0){
 		var aberto = "<?=$aberto?>";
 		if(aberto === 'Sim'){
 			var myModal = new bootstrap.Modal(document.getElementById('modalFechamento'), {
-			backdrop: 'static'
-		});
+				backdrop: 'static'
+			});
 		}else{
 			var myModal = new bootstrap.Modal(document.getElementById('modalAbertura'), {
-			backdrop: 'static'
-		});
+				backdrop: 'static'
+			});
 		}
 		
 
@@ -301,6 +302,58 @@ if($total_reg > 0){
                 }
 
                 $('#mensagem-abertura').text(mensagem)
+
+            },
+
+            cache: false,
+            contentType: false,
+            processData: false,
+            xhr: function () {  // Custom XMLHttpRequest
+            	var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) { // Avalia se tem suporte a propriedade upload
+                	myXhr.upload.addEventListener('progress', function () {
+                		/* faz alguma coisa durante o progresso do upload */
+                	}, false);
+                }
+                return myXhr;
+            }
+        });
+	});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+	$("#form-fechamento").submit(function () {
+		
+		event.preventDefault();
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: "fechamento.php",
+			type: 'POST',
+			data: formData,
+
+			success: function (mensagem) {
+
+				$('#mensagem-fechamento').removeClass()
+
+				if (mensagem.trim() == "Aberto com Sucesso!") {
+
+                    //$('#nome').val('');
+                    //$('#cpf').val('');
+                    $('#btn-fechar-perfil').click();
+                    window.location = "pdv.php";
+
+                } else {
+
+                	$('#mensagem-fechamento').addClass('text-danger')
+                }
+
+                $('#mensagem-fechamento').text(mensagem)
 
             },
 

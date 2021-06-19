@@ -24,6 +24,11 @@ $valor_recebido = str_replace(',', '.', $valor_recebido);
 
 $forma_pgto_input = $_POST['forma_pgto_input'];
 
+//DEFINIR QUAL O TIPO DE PAGAMENTO E REDIRECIONAR PARA API
+if($forma_pgto_input == '2'){
+	//VAMOS REDIRECIONR PARA PAGAMENTO NO CRÉDITO
+}
+
 //FECHAR A VENDA
 if($forma_pgto_input != ""){
 	$troco = $_POST['valor_troco'];
@@ -69,7 +74,7 @@ if($forma_pgto_input != ""){
 	//RELACIONAR OS ITENS DA VENDA COM A NOVA VENDA
 	$query_con = $pdo->query("UPDATE itens_venda SET venda = '$id_venda' WHERE usuario = '$id_usuario' and venda = 0");
 
-	echo 'Venda Salva!';
+	echo 'Venda Salva!&-/z'.$id_venda;
 	exit();
 }
 

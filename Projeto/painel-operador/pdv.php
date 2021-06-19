@@ -15,6 +15,7 @@ if($total_reg == 0){
   echo "<script language='javascript'>window.location='index.php'</script>";
 }
 
+$desconto_porcentagem = "Nao";
 if($desconto_porcentagem == 'Sim'){
   $desc = '%';
 }else{
@@ -26,7 +27,7 @@ if($desconto_porcentagem == 'Sim'){
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="pt-br">
 <head>
-  <title><?php echo $nome_sistema ?></title>
+<title><?php echo $nome_sistema ?></title>
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
@@ -36,9 +37,9 @@ if($desconto_porcentagem == 'Sim'){
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  <link rel="stylesheet" href="../vendor/css/telapdv.css">
+  <link rel="stylesheet" href="../vendor/css/telapdv2.css">
 
-  <link rel="shortcut icon" href="../img/favicon.ico" />
+  <link rel="shortcut icon" href="../img/favcon2.ico" />
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
@@ -309,12 +310,7 @@ if($desconto_porcentagem == 'Sim'){
 
         $('#mensagem-venda').text("");
 
-        if(result.trim() === "Venda Salva!"){
-          
-          $('#btn-fechar-venda').click();
-           window.location = "pdv.php";
-           return;
-        }
+
 
         if(result.trim() === "Não é possível efetuar uma venda sem itens!"){
           $('#mensagem-venda').addClass('text-danger')
@@ -324,6 +320,14 @@ if($desconto_porcentagem == 'Sim'){
         }
 
         var array = result.split("&-/z");
+
+        if(array[0] === "Venda Salva!"){
+          
+          $('#btn-fechar-venda').click();
+          
+           window.location = "comprovante_class.php?id=" + array[1];
+           return;
+        }
 
 
         if(array.length == 2){
@@ -530,3 +534,5 @@ if($desconto_porcentagem == 'Sim'){
         buscarDados();
     })
   </script>
+
+

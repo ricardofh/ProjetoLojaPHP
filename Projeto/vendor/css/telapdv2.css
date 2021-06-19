@@ -171,7 +171,6 @@ Payment
 
 .payment {
   z-index: 0;
-  width: 100%;
   background:#e6e6e6;
   
 }
@@ -179,9 +178,11 @@ Payment
 
 
 .background{
-  background-color:#858585;
+  background-color:#04053b;
   color:#FFF;
   padding:3px 10px;
+  margin-bottom:5px;
 }
+
 
 
